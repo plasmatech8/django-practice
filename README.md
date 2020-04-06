@@ -90,3 +90,30 @@ Product.objects.all()
 `>>> <QuerySet [<Product: Product object (1)>, <Product: Product object (2)>]>`
 
 Now you can start the server (`python manage.py runserver`) and see your newly created objects.
+
+# New (Better) Model Fields
+
+We will update `src/products/models.py` because the title is too long, price is passed as a string, etc.
+
+We can delete all the files in the migrations folder, the pycache directory, and the sqlite database. This means starting everything over.
+
+See the Django field type reference: https://docs.djangoproject.com/en/3.0/ref/models/fields/#field-types
+
+```python
+class Product(models.Model):
+    title       = models.CharField(max_length=120)
+    description = models.TextField(blank=True, null=True)
+    price       = models.DecimalField(decimal_places=2, max_digits=1000)
+    summary     = models.TextField(default="This is cool!")    
+```
+
+Now make migrations and recreate super user:
+```
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+Use `python manage.py migrate --run-syncdb` if you run into operational error, no such table issues.
+
+Now when you attempt to add new products in the admin age, the fields will have fixed input length, and input validation is performed.
