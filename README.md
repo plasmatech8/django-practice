@@ -1,6 +1,8 @@
 # django-practice
 Following tutorial from https://www.youtube.com/watch?v=F5mRW0jo-U4
 
+(mark, mark)
+
 ## Setup
 
 Open terminal/Anaconda prompt:
@@ -65,4 +67,26 @@ Now we can register the model to the app by adding `admin.site.register(Product)
 
 Now we can run the server and register new products in the admin page. (with `python manage.py runserver` and go to http://127.0.0.1:8000/admin)
 
-(https://youtu.be/F5mRW0jo-U4?t=2554)
+## Create Product Objects in the Python Shell
+
+We used the admin webpage before, now we will use Python shell.
+
+```bash
+python manage.py shell
+```
+```python
+from products.models import Product
+Product.objects.all()
+```
+`>>> <QuerySet [<Product: Product object (1)>]>`
+
+```python
+Product.objects.create(title='New product 2', 
+                       description='another one',
+                       price='19423',
+                       summary='sweet')
+Product.objects.all()
+```
+`>>> <QuerySet [<Product: Product object (1)>, <Product: Product object (2)>]>`
+
+Now you can start the server (`python manage.py runserver`) and see your newly created objects.
