@@ -117,3 +117,17 @@ python manage.py createsuperuser
 Use `python manage.py migrate --run-syncdb` if you run into operational error, no such table issues.
 
 Now when you attempt to add new products in the admin age, the fields will have fixed input length, and input validation is performed.
+
+# Change a Model
+
+I am going to make a change to the model without deleting the database or migrations.
+
+Make migrations and migrate syncs the database to the models in our code.
+
+If we add a non-nullable field to our model (e.g. a boolean field called 'featured'), then when we make migrations, we will be asked to either make it nullable or use a default value for the new fields in old records.
+
+We need to do: `null=True` or `default=<value>` in code. Or we can provide a one-off default when prompted.
+
+Note: `blank=True` means that the field can be blank (different from null).
+
+
