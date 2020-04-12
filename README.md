@@ -165,3 +165,35 @@ We can create the folder `src/templates` and create `home.html`.
 Also, make sure you add the `templates` directory to `settings.py`. Add the directory by doing: `'DIRS': [os.path.join(BASE_DIR, 'templates')]` in the `TEMPLATES` list.
 
 Now our templates are being used in the webpage!
+
+# Django Templating Engine Basics
+
+There is a lot of things in common between each of the pages we created and we do not want to duplicate work in multiple files and make things messy. (Headers, CSS, Javascript, nav bars, etc)
+
+So we should use **template inheritance** -> A root page for our other pages to inherit from.
+
+The name: `base.html` is the convention.
+
+We can write:
+```html
+{% block content %}
+    replace me
+{% endblock %}
+```
+In the places in our base.html that we want replace with child content.
+
+Now we must extend our child content by surrounding it with block replace tags and adding an inheritance tag. 
+
+i.e.
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Hello World</h1>
+{{ request.user }} <br>
+{{ request.user.is_authenticated }} <br>
+<p>This is a template.</p>
+{% endblock %}
+```
+
+Note that 'content' is the name of the blocks.
