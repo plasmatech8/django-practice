@@ -130,4 +130,16 @@ We need to do: `null=True` or `default=<value>` in code. Or we can provide a one
 
 Note: `blank=True` means that the field can be blank (different from null).
 
+# Change Default Homepage to Custom Homepage
 
+Let's create an app called `pages`. (`python manage.py startapp products` and add to `INSTALLED_APPS`)
+
+Go to [views.py](src/pages/views.py).
+
+We can use Python classes or functions to return our webpages.
+
+Let's create `home_view` function.
+
+Afterwards we will need to update [urls.py](src/trydjango/urls.py). Notice that we already have the path `admin/` set to the admin page. We can add the  `pages.views.home_view` function to the `''` path.
+
+Now we have a new homepage.
