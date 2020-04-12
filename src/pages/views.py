@@ -4,12 +4,24 @@ from django.shortcuts import render
 # Create your views here.
 
 
-def home_view(*args, **kwargs):
-    return HttpResponse("<h1>Hello World</h1>") # String of HTML
+def home_view(request, *args, **kwargs):
+    return render(request, 'home.html', {})
 
 
 def contact_view(request, *args, **kwargs):
+    return render(request, 'contact.html', {})
+
+
+def about_view(request, *args, **kwargs):
+    return render(request, 'about.html', {})
+
+
+def social_view(request, *args, **kwargs):
+    return render(request, 'social.html', {})
+
+
+def example_view(request, *args, **kwargs):
     print('Request:  ', request)
     print('User:     ', request.user)
     print(args, kwargs)
-    return HttpResponse('<h1>Contact View</h1>')
+    return HttpResponse('<h1>Example View</h1>') # String of HTML

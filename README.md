@@ -152,5 +152,16 @@ We can see requst information.
 
 `request.user` is the user. If you are logged in as admin it will be the admin username. If you open an incognito window, it will be AnnoymousUser.
 
+# Django Templates
 
+Instead of writing strings in our view functions, we want to have templates.
 
+For this we can use the Django rendering engine (`django.shortcuts.render`).
+
+Our view functions can return `render(request, 'home.html', {})` to return a rendered view, with a context dictionary.
+
+We can create the folder `src/templates` and create `home.html`. 
+
+Also, make sure you add the `templates` directory to `settings.py`. Add the directory by doing: `'DIRS': [os.path.join(BASE_DIR, 'templates')]` in the `TEMPLATES` list.
+
+Now our templates are being used in the webpage!
