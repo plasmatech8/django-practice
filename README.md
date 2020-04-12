@@ -143,3 +143,14 @@ Let's create `home_view` function.
 Afterwards we will need to update [urls.py](src/trydjango/urls.py). Notice that we already have the path `admin/` set to the admin page. We can add the  `pages.views.home_view` function to the `''` path.
 
 Now we have a new homepage.
+
+# URLs Routing and Requests
+
+In our view function, a `<WSGIRequest: GET>` object is passed in. 
+
+We can see requst information. 
+
+`request.user` is the user. If you are logged in as admin it will be the admin username. If you open an incognito window, it will be AnnoymousUser.
+
+
+

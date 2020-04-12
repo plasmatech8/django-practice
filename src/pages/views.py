@@ -5,5 +5,11 @@ from django.shortcuts import render
 
 
 def home_view(*args, **kwargs):
-    
     return HttpResponse("<h1>Hello World</h1>") # String of HTML
+
+
+def contact_view(request, *args, **kwargs):
+    print('Request:  ', request)
+    print('User:     ', request.user)
+    print(args, kwargs)
+    return HttpResponse('<h1>Contact View</h1>')
