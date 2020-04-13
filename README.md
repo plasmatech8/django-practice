@@ -203,3 +203,11 @@ Note that 'content' is the name of the blocks.
 Now lets move our navbar into another HTML document named `navbar.html`.
 
 We can add this to `base.html` by using `{% include 'navbar.html' %}`.
+
+# Rendering Context in a Template (backend rendering)
+
+We can render our HTML using the context dictionary.
+
+We can update the context dictionary in `views.py` and add `{{ my_text }}` to obtain the value from the dictionary.
+
+https://youtu.be/F5mRW0jo-U4?t=5603
