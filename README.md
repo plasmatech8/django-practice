@@ -197,3 +197,9 @@ i.e.
 ```
 
 Note that 'content' is the name of the blocks.
+
+# Include Template Tag
+
+Now lets move our navbar into another HTML document named `navbar.html`.
+
+We can add this to `base.html` by using `{% include 'navbar.html' %}`.
