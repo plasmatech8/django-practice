@@ -227,4 +227,18 @@ i.e.
 
 `{{ forloop.counter }}` can also be used to obtain the iteration number.
 
+# Using Conditions in a Template
+
+Usually we want most if-else statements to occur in the view and not the template, but there are cases where it is suitable to do this in the template.
+
+We can create an if-else statement like:
+```html
+{% if my_item == 5 %}  
+    <li>Item {{ forloop.counter }} plus 22 = {{ my_item|add:22 }}</li>
+{% else %}
+    <li>Item {{ forloop.counter }} = {{ my_item }}</li>
+{% endif %}
+```
+
+See the documentation for build-in template tags: https://docs.djangoproject.com/en/3.0/ref/templates/builtins/
 
