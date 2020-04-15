@@ -91,7 +91,7 @@ Product.objects.all()
 
 Now you can start the server (`python manage.py runserver`) and see your newly created objects.
 
-# New (Better) Model Fields
+## Add New Fields for our Model 
 
 We will update `src/products/models.py` because the title is too long, price is passed as a string, etc.
 
@@ -118,7 +118,7 @@ Use `python manage.py migrate --run-syncdb` if you run into operational error, n
 
 Now when you attempt to add new products in the admin age, the fields will have fixed input length, and input validation is performed.
 
-# Change a Model
+## Change a Model
 
 I am going to make a change to the model without deleting the database or migrations.
 
@@ -130,7 +130,7 @@ We need to do: `null=True` or `default=<value>` in code. Or we can provide a one
 
 Note: `blank=True` means that the field can be blank (different from null).
 
-# Change Default Homepage to Custom Homepage
+## Change Default Homepage to Custom Homepage
 
 Let's create an app called `pages`. (`python manage.py startapp products` and add to `INSTALLED_APPS`)
 
@@ -144,7 +144,7 @@ Afterwards we will need to update [urls.py](src/trydjango/urls.py). Notice that 
 
 Now we have a new homepage.
 
-# URLs Routing and Requests
+## URLs Routing and Requests
 
 In our view function, a `<WSGIRequest: GET>` object is passed in. 
 
@@ -152,7 +152,7 @@ We can see requst information.
 
 `request.user` is the user. If you are logged in as admin it will be the admin username. If you open an incognito window, it will be AnnoymousUser.
 
-# Django Templates
+## Django Templates
 
 Instead of writing strings in our view functions, we want to have templates.
 
@@ -166,7 +166,7 @@ Also, make sure you add the `templates` directory to `settings.py`. Add the dire
 
 Now our templates are being used in the webpage!
 
-# Django Templating Engine Basics
+## Django Templating Engine Basics
 
 There is a lot of things in common between each of the pages we created and we do not want to duplicate work in multiple files and make things messy. (Headers, CSS, Javascript, nav bars, etc)
 
@@ -198,19 +198,19 @@ i.e.
 
 Note that 'content' is the name of the blocks.
 
-# Include Template Tag
+## Include Template Tag
 
 Now lets move our navbar into another HTML document named `navbar.html`.
 
 We can add this to `base.html` by using `{% include 'navbar.html' %}`.
 
-# Rendering Context in a Template (backend rendering)
+## Rendering Context in a Template (backend rendering)
 
 We can render our HTML using the context dictionary.
 
 We can update the context dictionary in `views.py` and add `{{ my_text }}` to obtain the value from the dictionary.
 
-# For Loop in a Template
+## For Loop in a Template
 
 We want to print the list called 'my_list' in the context dictionary into a `<ul>`.
 
@@ -227,7 +227,7 @@ i.e.
 
 `{{ forloop.counter }}` can also be used to obtain the iteration number.
 
-# Using Conditions in a Template
+## Using Conditions in a Template
 
 Usually we want most if-else statements to occur in the view and not the template, but there are cases where it is suitable to do this in the template.
 
@@ -242,3 +242,100 @@ We can create an if-else statement like:
 
 See the documentation for build-in template tags: https://docs.djangoproject.com/en/3.0/ref/templates/builtins/
 
+## Template Tags and Filters
+
+So far we have used several build-in template tags:
+* extends
+* block
+* for
+* if
+
+There are a lot more (`{% x %}`). i.e.
+* comment
+* cycle
+* debug
+* filter
+* firstof
+* for ... empty
+* ifchanged
+* include
+* load
+* lorem
+* now
+* regroup
+* resetcycle
+* spaceless
+* url
+* verbatim
+* widthratio
+* with
+
+And filters (`{{ x|y }}`). i.e.
+* add `{{ value|add:second }}`
+* addslashes
+* capfirst
+* centre
+* cut
+* date
+* default
+* default_if_none
+* dictsort
+* divisibleby
+* escape
+* escapejs
+* filesizeformat
+* first
+* floatformat
+* force_escape
+* get_digit
+* iriencode
+* join
+* json_scrip
+* last
+* length
+* lenth_is
+* linebreaks
+* linebreaksbr
+* linenumbers
+* ljust
+* lower
+* make_list
+* phone2numeric
+* pluralize
+* pprint
+* random
+* rjust
+* safe
+* safeseq
+* slice
+* slugify
+* stringformat
+* striptags
+* time
+* timesince
+* timeuntil
+* title
+* truncatechars
+* truncatechars_html
+* truncatewords
+* truncatewords_html
+* unordered_list
+* upper
+* urlencode
+* urlize
+* urlizetrunc
+* wordcount
+* wordwrap
+* yesno
+* etc
+
+You can even use multiple filters at the same time.
+
+e.g. 
+* `{{ title|title }}`
+* `{{ body|lower|capfirst }}`
+* `{{ my_html|safe }}` (renders HTML)
+* `{{ address|slugify }}`
+
+
+https://youtu.be/F5mRW0jo-U4?t=6548
