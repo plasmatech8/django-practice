@@ -210,4 +210,21 @@ We can render our HTML using the context dictionary.
 
 We can update the context dictionary in `views.py` and add `{{ my_text }}` to obtain the value from the dictionary.
 
-https://youtu.be/F5mRW0jo-U4?t=5603
+# For Loop in a Template
+
+We want to print the list called 'my_list' in the context dictionary into a `<ul>`.
+
+We can loop through our list using `{% for item in list %}` and `{% endfor %}` tags.
+
+i.e.
+```html
+<ul>
+    {% for my_item in my_list %} 
+    <li>{{ forloop.counter }} - {{ my_item }}</li>
+    {% endfor %}
+</ul>
+```
+
+`{{ forloop.counter }}` can also be used to obtain the iteration number.
+
+
