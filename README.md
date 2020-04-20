@@ -371,3 +371,14 @@ We will create a new template under `src/templates/product/detail.html`.
 <p>Price: ${{ obj.price }}</p>
 {% endblock %}
 ```
+## How Django Templates Load with Apps
+
+If we want to bundle our products page/templates, we can create a `templates` directory inside the app directory. (i.e. if we are creating a 3rd party app for other people)
+
+We will create the template `src/products/templates/product2/detail.html`, and change the template used within `src/products/views.py` to `product2/detail.html` (within app) instead of `product/detail.html` (in the templates directory).
+
+Note: No configuration in `settings.py` is needed for the view to access the template from inside the same app. (as long as `'APP_DIRS': True`)
+
+Note: Ensure that the paths to templates do not conflict to avoid confusion. Paths are checked in a specific order. We can override defaul django templates if we wanted to.
+
+https://youtu.be/F5mRW0jo-U4?t=7610
