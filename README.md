@@ -337,5 +337,37 @@ e.g.
 * `{{ my_html|safe }}` (renders HTML)
 * `{{ address|slugify }}`
 
+## Render Data from our Database 
 
-https://youtu.be/F5mRW0jo-U4?t=6548
+Open `python manage.py shell`
+```python
+from products.models import Product
+
+obj = Product.objects.get(id=1)
+
+obj.title
+```
+
+We want everything related to products to be under the `products` app, so we will add a new view to `src/products/views.py` called `product_detail_view`.
+
+```python
+def product_detail_view(request):
+    obj = Product.objects.get(id=1)
+    # context = {'title': obj.title, 'description': obj.description, 'price': obj.price}
+    context = {'obj': obj}
+    return render(request, "product/detail.html", context)
+```
+
+Django has an inhuilt feature: all records have an auto-incrementing ID field.
+
+We will create a new template under `src/templates/product/detail.html`.
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Product: {{ obj.title }}</h1>
+<p>{% if obj.description != None and obj.description != '' %}{{ obj.description }}
+    {% else %}No description{% endif %}</p>
+<p>Price: ${{ obj.price }}</p>
+{% endblock %}
+```
