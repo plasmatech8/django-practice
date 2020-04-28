@@ -3,6 +3,12 @@ Following tutorial from https://www.youtube.com/watch?v=F5mRW0jo-U4
 
 (mark, mark)
 
+1. Basics (Apps)
+2. Models
+3. Routing
+4. Templating
+5. Forms
+
 ## Setup
 
 Open terminal/Anaconda prompt:
@@ -18,7 +24,6 @@ Install django
 ```
 pip install django
 ```
-
 ## Create Project
 
 Create project
@@ -250,84 +255,7 @@ So far we have used several build-in template tags:
 * for
 * if
 
-There are a lot more (`{% x %}`). i.e.
-* comment
-* cycle
-* debug
-* filter
-* firstof
-* for ... empty
-* ifchanged
-* include
-* load
-* lorem
-* now
-* regroup
-* resetcycle
-* spaceless
-* url
-* verbatim
-* widthratio
-* with
-
-And filters (`{{ x|y }}`). i.e.
-* add `{{ value|add:second }}`
-* addslashes
-* capfirst
-* centre
-* cut
-* date
-* default
-* default_if_none
-* dictsort
-* divisibleby
-* escape
-* escapejs
-* filesizeformat
-* first
-* floatformat
-* force_escape
-* get_digit
-* iriencode
-* join
-* json_scrip
-* last
-* length
-* lenth_is
-* linebreaks
-* linebreaksbr
-* linenumbers
-* ljust
-* lower
-* make_list
-* phone2numeric
-* pluralize
-* pprint
-* random
-* rjust
-* safe
-* safeseq
-* slice
-* slugify
-* stringformat
-* striptags
-* time
-* timesince
-* timeuntil
-* title
-* truncatechars
-* truncatechars_html
-* truncatewords
-* truncatewords_html
-* unordered_list
-* upper
-* urlencode
-* urlize
-* urlizetrunc
-* wordcount
-* wordwrap
-* yesno
-* etc
+There are a lot more tags (`{% x %}`) and filters (`{{ x|y }}`). 
 
 You can even use multiple filters at the same time.
 
@@ -381,4 +309,45 @@ Note: No configuration in `settings.py` is needed for the view to access the tem
 
 Note: Ensure that the paths to templates do not conflict to avoid confusion. Paths are checked in a specific order. We can override defaul django templates if we wanted to.
 
-https://youtu.be/F5mRW0jo-U4?t=7610
+## Django Model Forms
+
+We will go into the `products` app and create `forms.py`.
+```python
+from django import forms
+from .models import Product
+
+class ProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = [
+            'title',
+            'description',
+            'price'
+        ]
+        
+```
+Then we will create a view that renders this form in `views.py`.
+```python
+def product_create_view(request):
+    form = ProductForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+    context = {
+        'form': form
+    }
+    return render(request, "product2/product_create.html", context)
+```
+And create the temaplate:
+```python
+{% extends 'base.html' %}
+
+{% block content %}
+<form method='POST'> {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' value='save' />
+</form>
+{% endblock %}
+```
+The `form.as_p` attribute will automatically render a Product creation form so we can create products from within a template. The `csrf_token` is needed for CSRF verification. Make sure that all required attributes of your product model is included in the form (`Meta`)
+
+And lastly, add the new page to `urls.py`.
