@@ -3,4 +3,7 @@
     "terminal.integrated.shellArgs.linux": [
         "--rcfile", ".vscode/.bashrc"
     ],
+    "python.linting.pylintEnabled": false,
+    "python.linting.pycodestyleEnabled": true,
+    "python.linting.enabled": true,
 }
