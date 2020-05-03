@@ -351,3 +351,36 @@ And create the temaplate:
 The `form.as_p` attribute will automatically render a Product creation form so we can create products from within a template. The `csrf_token` is needed for CSRF verification. Make sure that all required attributes of your product model is included in the form (`Meta`)
 
 And lastly, add the new page to `urls.py`.
+
+## Raw HTML Forms
+
+We can also do raw custom HTML forms.
+
+But if we click 'save', we will get forbidden, CSRF verification failed.
+
+Also, if we use `method=GET` it only add a query string to and change the URL if we set action. i.e. Google Search:
+```html
+{% extends 'base.html' %}
+{% block content %}
+<form action='htttp://google.com/search' method='GET'>
+    <input type='text' name='q' placeholder='Your search' />
+    <input type='submit' value='save' />
+</form>
+{% endblock %}
+```
+
+To avoid the CSRF token verification issue on our website, we must include the `{% csrf_token %}` tag. Now the data can go to the webserver (but will return 403 error).
+
+You can see your POST and GET data by using `request.POST` and `request.GET`.
+```python
+def product_create_view(request):
+    print(request.GET)
+    print(request.POST)  # QueryDict
+    if request.method == "POST":
+        new_title = request.POST.get('title')
+        Products.objects.create(title=new_title, ...)
+    context = {}
+    return render(request, "product2/product_create.html", context)
+```
+
+This is a bad method of saving data because we still need to add validation and cleaning.
