@@ -6,6 +6,7 @@ from .forms import ProductForm
 
 
 def product_create_view(request):
+    # obj = Product.objects.get(id=1)  # We can use instance=obj to update an existing record
     form = ProductForm(request.POST or None)
     if form.is_valid():
         form.save()

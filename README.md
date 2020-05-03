@@ -466,3 +466,28 @@ def clean_title(self, *args, **kwargs):
 Now expletive language does not pass validation for product names.
 
 We can do all sorts of validation such as email checking, expletive removal, etc.
+
+## Initial Values for Forms (+ updating existing records)
+
+We can set initial values for forms from within our `view.py` by creating a dictionary and passing into the `RawProductForm`.
+
+```python
+initial_data = {'title'='My title'}
+form = RawProductForm(request.POST or None, initial_data=initial_data)
+context = {'form': form}
+return render(request, 'products/products_create.html', context)
+```
+It the same regardless to whether we use a Model Form or a Django Form.
+
+We can also update an existing record with auto-filled content. (initial data overrides)
+
+```python
+obj = Products.objects.get(id=1)
+form = RawProductForm(request.POST or None, instance=obj)
+if form.is_valid():
+    form.save()
+context = {'form': form}
+return render(request, 'products/products_create.html', context)
+```
+
+https://youtu.be/F5mRW0jo-U4?t=10305
