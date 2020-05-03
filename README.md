@@ -68,7 +68,7 @@ class Product(models.Model):
 
 Use commands `python manage.py makemigrations` and `python manage.py migrate` to update the models in the database. These are important to use every time we update our models.
 
-Now we can register the model to the app by adding `admin.site.register(Product)` to [src/products/admin.py](src/products/admin.py) 
+Now we can register the model to the app by adding `admin.site.register(Product)` to [src/products/admin.py](src/products/admin.py)
 
 Now we can run the server and register new products in the admin page. (with `python manage.py runserver` and go to http://127.0.0.1:8000/admin)
 
@@ -86,7 +86,7 @@ Product.objects.all()
 `>>> <QuerySet [<Product: Product object (1)>]>`
 
 ```python
-Product.objects.create(title='New product 2', 
+Product.objects.create(title='New product 2',
                        description='another one',
                        price='19423',
                        summary='sweet')
@@ -96,7 +96,7 @@ Product.objects.all()
 
 Now you can start the server (`python manage.py runserver`) and see your newly created objects.
 
-## Add New Fields for our Model 
+## Add New Fields for our Model
 
 We will update `src/products/models.py` because the title is too long, price is passed as a string, etc.
 
@@ -109,7 +109,7 @@ class Product(models.Model):
     title       = models.CharField(max_length=120)
     description = models.TextField(blank=True, null=True)
     price       = models.DecimalField(decimal_places=2, max_digits=1000)
-    summary     = models.TextField(default="This is cool!")    
+    summary     = models.TextField(default="This is cool!")
 ```
 
 Now make migrations and recreate super user:
@@ -151,9 +151,9 @@ Now we have a new homepage.
 
 ## URLs Routing and Requests
 
-In our view function, a `<WSGIRequest: GET>` object is passed in. 
+In our view function, a `<WSGIRequest: GET>` object is passed in.
 
-We can see requst information. 
+We can see requst information.
 
 `request.user` is the user. If you are logged in as admin it will be the admin username. If you open an incognito window, it will be AnnoymousUser.
 
@@ -165,7 +165,7 @@ For this we can use the Django rendering engine (`django.shortcuts.render`).
 
 Our view functions can return `render(request, 'home.html', {})` to return a rendered view, with a context dictionary.
 
-We can create the folder `src/templates` and create `home.html`. 
+We can create the folder `src/templates` and create `home.html`.
 
 Also, make sure you add the `templates` directory to `settings.py`. Add the directory by doing: `'DIRS': [os.path.join(BASE_DIR, 'templates')]` in the `TEMPLATES` list.
 
@@ -187,7 +187,7 @@ We can write:
 ```
 In the places in our base.html that we want replace with child content.
 
-Now we must extend our child content by surrounding it with block replace tags and adding an inheritance tag. 
+Now we must extend our child content by surrounding it with block replace tags and adding an inheritance tag.
 
 i.e.
 ```html
@@ -224,7 +224,7 @@ We can loop through our list using `{% for item in list %}` and `{% endfor %}` t
 i.e.
 ```html
 <ul>
-    {% for my_item in my_list %} 
+    {% for my_item in my_list %}
     <li>{{ forloop.counter }} - {{ my_item }}</li>
     {% endfor %}
 </ul>
@@ -238,7 +238,7 @@ Usually we want most if-else statements to occur in the view and not the templat
 
 We can create an if-else statement like:
 ```html
-{% if my_item == 5 %}  
+{% if my_item == 5 %}
     <li>Item {{ forloop.counter }} plus 22 = {{ my_item|add:22 }}</li>
 {% else %}
     <li>Item {{ forloop.counter }} = {{ my_item }}</li>
@@ -255,17 +255,17 @@ So far we have used several build-in template tags:
 * for
 * if
 
-There are a lot more tags (`{% x %}`) and filters (`{{ x|y }}`). 
+There are a lot more tags (`{% x %}`) and filters (`{{ x|y }}`).
 
 You can even use multiple filters at the same time.
 
-e.g. 
+e.g.
 * `{{ title|title }}`
 * `{{ body|lower|capfirst }}`
 * `{{ my_html|safe }}` (renders HTML)
 * `{{ address|slugify }}`
 
-## Render Data from our Database 
+## Render Data from our Database
 
 Open `python manage.py shell`
 ```python
@@ -324,7 +324,7 @@ class ProductForm(forms.ModelForm):
             'description',
             'price'
         ]
-        
+
 ```
 Then we will create a view that renders this form in `views.py`.
 ```python
@@ -384,3 +384,85 @@ def product_create_view(request):
 ```
 
 This is a bad method of saving data because we still need to add validation and cleaning.
+
+## Pure Django Forms
+
+A Django form can also be created manually using the Django forms. i.e.
+```python
+from django import forms
+
+class RawProductForm(forms.Form):
+    title       = forms.CharField()
+    description = forms.CharField()
+    price       = forms.DecimalField()
+```
+We can then use the form the same way as Django model forms.
+```python
+def product_create_view(request):
+    form = RawProductForm() # For GET
+    if request.method == "POST":
+        form = RawProductForm(request.POST) # For POST
+        if form.is_valid():
+            print(form.cleaned_data)  # Now the data is good
+            Products.objects.create(**form.cleaned_data)
+        else:
+            print(form.errors)
+    context = {
+        'form': form
+    }
+    return render(request, "product2/product_create.html", context)
+```
+A user can potentially disrupt the client-side form, so we can add validation as shown above.
+
+It is also important to add the CSRF token.
+
+> Django Model Forms are the best because they are directly attached to models with the webserver and database configured automatically.
+
+## Form Widgets
+
+We can change a lot about our model fields. i.e.
+```python
+class RawProductForm(forms.Form):
+    title       = forms.CharField(
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'placeholder'='your title'
+            }
+        )
+    )
+    description = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'new-class-name',
+                'rows': 2,
+                'cols': 12,
+                'id': 'new-id'
+            }
+        )
+    )
+    price       = forms.DecimalField(initial=99.99)
+```
+Now our custom/pure-Django form is almost identical to our Model Form.
+
+> Another neat feature to note is that we can actually override the widgets of **Model Forms** by setting attributes on our class like how we did for pure-django/custom Forms: `title = forms.CharField()`.
+
+## Form Validation Methods
+
+We can use Django to validate our inputs.
+
+We can use the `clean_<field-name>()` function to clean inputs.
+
+```python
+def clean_title(self, *args, **kwargs):
+    title = self.cleaned_data.get('title')
+    if 'fuck' in title.lower():
+        raise forms.ValidationError("This is not a valid title")
+    else:
+        return title
+```
+
+Now expletive language does not pass validation for product names.
+
+We can do all sorts of validation such as email checking, expletive removal, etc.
