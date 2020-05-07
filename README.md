@@ -522,7 +522,7 @@ We can alternatively use a `try` block and raise a `django.http.Http404`.
 
 We will create a product deletion form (the form itself acts as confirmation page).
 
-We will create a page `product_delete.html`, create a view `product_delete_view(request, p_id)`, and route a path to it `path('product/<int:p_id>/delete/', product_delete_view)`.
+We will create a page `product2/product_delete.html`, create a view `product_delete_view(request, p_id)`, and route a path to it `path('product/<int:p_id>/delete/', product_delete_view)`.
 
 `obj.delete()` deletes a record, but we want to do this using a POST request, not using GET.
 
@@ -533,3 +533,10 @@ if request.method == 'POST':
         return redirect('../..')
 ```
 To delete the object when the DELETE button is clicked, and redirect back to the base `products/` page.
+
+## View a List of Database Objects
+
+We will create the `product2/product_list.html` template which uses for-loop template tags, then create the `product_list_view(request)` view which stores all products in the database as a list in the context, then add the view to the `product/list/` URL.
+
+
+https://youtu.be/F5mRW0jo-U4?t=10800
