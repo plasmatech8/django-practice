@@ -517,3 +517,19 @@ If the product with the id does not exist, an error page will show up. We will i
 Now we get page not found error instead of product does not exist.
 
 We can alternatively use a `try` block and raise a `django.http.Http404`.
+
+## Delete and Confirm
+
+We will create a product deletion form (the form itself acts as confirmation page).
+
+We will create a page `product_delete.html`, create a view `product_delete_view(request, p_id)`, and route a path to it `path('product/<int:p_id>/delete/', product_delete_view)`.
+
+`obj.delete()` deletes a record, but we want to do this using a POST request, not using GET.
+
+In our view, we will use:
+```python
+if request.method == 'POST':
+        obj.delete()
+        return redirect('../..')
+```
+To delete the object when the DELETE button is clicked, and redirect back to the base `products/` page.

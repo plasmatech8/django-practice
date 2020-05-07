@@ -19,7 +19,7 @@ from django.urls import path
 from pages.views import (home_view, contact_view, about_view, social_view,
                          example_view)
 from products.views import (product_detail_view, product_create_view,
-                            product_dynamic_lookup_view)
+                            product_dynamic_lookup_view, product_delete_view)
 
 urlpatterns = [
     path('', home_view),
@@ -31,4 +31,5 @@ urlpatterns = [
     path('product/', product_detail_view),
     path('product_create/', product_create_view),
     path('product/<int:p_id>/', product_dynamic_lookup_view),
+    path('product/<int:p_id>/delete/', product_delete_view),
 ]
