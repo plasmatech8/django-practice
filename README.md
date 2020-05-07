@@ -490,4 +490,22 @@ context = {'form': form}
 return render(request, 'products/products_create.html', context)
 ```
 
-https://youtu.be/F5mRW0jo-U4?t=10305
+## Dynamic URL Routing
+
+Now we will change the content based on the URL.
+
+We want to be able to pass in an ID into the URL and get a different resonse. i.e. http://127.0.0.1:8000/product/1/
+
+To do this we use the url path: `path('product/<int:p_id>', product_dynamic_lookup_view)`.
+
+And not the variable is being passed into the view function:
+```python
+def product_dynamic_lookup_view(request, p_id):
+    print(p_id)
+    obj = Product.objects.get(id=p_id)
+    context = {
+        "obj": obj
+    }
+    return render(request, "product2/detail.html", context)
+```
+Now we are rendering a new product for each id.
