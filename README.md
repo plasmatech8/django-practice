@@ -509,3 +509,11 @@ def product_dynamic_lookup_view(request, p_id):
     return render(request, "product2/detail.html", context)
 ```
 Now we are rendering a new product for each id.
+
+## Handle DoesNotExist
+
+If the product with the id does not exist, an error page will show up. We will import the `django.shortcuts.get_object_or_404` function and use that to handle this situation.
+
+Now we get page not found error instead of product does not exist.
+
+We can alternatively use a `try` block and raise a `django.http.Http404`.
