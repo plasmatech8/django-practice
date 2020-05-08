@@ -587,3 +587,17 @@ If we change the resource path, then the links in our code will continue working
 > I see a very small benefit to this compared to just using the resource path, but it is the standard.
 
 Now, we need to make the links for our nav bar dynamic (and other templates if they have links). This will make it so that we can change our resource paths, while URLs in the **code** and **templates** can be dynamically updated.
+
+Making template URLs dynamic can be done using the `url` template tag (same as `reverse` in the server).
+```html
+<nav>
+    <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
+        <li><a href="{% url 'product' %}">Product</a></li>
+        <li><a href="{% url 'contact' %}">Contact</a></li>
+        <li><a href="{% url 'social' %}">Social</a></li>
+        <li><a href="{% url 'example' %}">Example</a></li>
+    </ul>
+</nav>
+```
