@@ -537,7 +537,7 @@ To delete the object when the DELETE button is clicked, and redirect back to the
 
 We will create the `product2/product_list.html` template which uses for-loop template tags, then create the `product_list_view(request)` view which stores all products in the database as a list in the context, then add the view to the `product/list/` URL.
 
-## Dynamic Linking of URLs
+## Dynamic Linking of URLs (dynamic updating of URLs - names, models, and templates)
 
 We want to add links to each products in our list of products.
 
@@ -556,7 +556,7 @@ And use in our template:
 
 But there is an more-standardised/better way...
 
-## Django URLs Reverse (dynamic updating of URLs - in models)
+## Django URLs Reverse (dynamic updating of URLs - names, models, and templates)
 
 We can give URLs names:
 ```python
@@ -601,3 +601,43 @@ Making template URLs dynamic can be done using the `url` template tag (same as `
     </ul>
 </nav>
 ```
+
+## In App URLs and Namespacing (dynamic updating of URLs - names, models, and templates)
+
+We have a lot of views to import, and what if we use more than one name for a single path? Ans: bad.
+
+We can move the product Paths from the `urls.py` in `trydjango` into the `products` app. Then (as described in comments) we can import the urls **ON TOP** of a base path in the `urls.py` in `trydjango`.
+
+`urls.py` in `products`:
+```python
+from django.urls import path
+from products.views import (product_detail_view, product_create_view,
+                            product_dynamic_lookup_view, product_delete_view,
+                            product_list_view)
+
+app_name = 'products'
+urlpatterns = [
+    path('', product_detail_view, name='product'),
+    path('create/', product_create_view, name='product-create'),
+    path('<int:p_id>/', product_dynamic_lookup_view, name='product-detail'),
+    path('<int:p_id>/delete/', product_delete_view, name='product-delete'),
+    path('list/', product_list_view, name='product-list'),
+]
+```
+
+`urls.py` in `trydjango`:
+```python
+path('product/', include('products.urls')),
+```
+
+`app_name` (namespace) was added because these URLs are in a different file and it is possible to accidently make duplicate named pages.
+
+We now MUST reverse the URL using `<app_name>:<url_name>`. e.g. `products:product-detail`.
+
+If we did not add the namespace, it is still possible to access it via the URL name without the app namespace (`<app_name>:`).
+
+We will need to add the `products:` namespace to the start of every reverse/url in the code and in the templates.
+
+> Basically, we have the choice to do routing via URL paths or names (+ namespaces). Using paths is simpler, but names allow for paths to update dynamically in views (+models). Names + namespaces are the best practice.
+
+https://youtu.be/F5mRW0jo-U4?t=11256
