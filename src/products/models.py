@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 # Create your models here.
 
@@ -11,4 +12,4 @@ class Product(models.Model):
     featured    = models.BooleanField(default=False)
 
     def get_absolute_url(self):
-        return f"/product/{self.id}/"
+        return reverse("product-detail", kwargs={"p_id": self.id})

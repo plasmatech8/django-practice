@@ -501,7 +501,6 @@ To do this we use the url path: `path('product/<int:p_id>', product_dynamic_look
 And not the variable is being passed into the view function:
 ```python
 def product_dynamic_lookup_view(request, p_id):
-    print(p_id)
     obj = Product.objects.get(id=p_id)
     context = {
         "obj": obj
@@ -554,3 +553,37 @@ And use in our template:
 ```html
 <a href='{{ instance.get_absolute_url }}'>{{ instance.title }} - ${{ instance.price }}</a>
 ```
+
+But there is an more-standardised/better way...
+
+## Django URLs Reverse (dynamic updating of URLs - in models)
+
+We can give URLs names:
+```python
+
+urlpatterns = [
+    path('', home_view),
+    path('contact/', contact_view, name='contact'),
+    path('about/', about_view, name='about'),
+    path('social/', social_view, name='social'),
+    path('example/', example_view, name='example'),
+    path('admin/', admin.site.urls, name='admin'),
+    path('product/', product_detail_view, name='product'),
+    path('product/create/', product_create_view, name='product-create'),
+    path('product/<int:p_id>/', product_dynamic_lookup_view, name='product-detail'),
+    path('product/<int:p_id>/delete/', product_delete_view, name='product-delete'),
+    path('product/list/', product_list_view, name='product-list'),
+]
+```
+And link make our via name:
+```python
+def get_absolute_url(self):
+    return reverse("product-detail", kwargs={"p_id": self.id})
+```
+Now we can use the URL name instead of the resource path for URLs.
+
+If we change the resource path, then the links in our code will continue working since we are using the names.
+
+> I see a very small benefit to this compared to just using the resource path, but it is the standard.
+
+Now, we need to make the links for our nav bar dynamic (and other templates if they have links). This will make it so that we can change our resource paths, while URLs in the **code** and **templates** can be dynamically updated.
