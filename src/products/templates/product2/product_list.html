@@ -8,7 +8,7 @@
 <h1>obj list loop</h1>
 <ul>
 {% for instance in obj_list %}
-    <li>{{ instance.id }} - {{ instance.title }} - ${{ instance.price }}</li>
+    <li>{{ instance.id }} - <a href='{{ instance.get_absolute_url }}'>{{ instance.title }} - ${{ instance.price }}</a></li>
 {% endfor %}
 </ul>
 

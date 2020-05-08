@@ -538,5 +538,19 @@ To delete the object when the DELETE button is clicked, and redirect back to the
 
 We will create the `product2/product_list.html` template which uses for-loop template tags, then create the `product_list_view(request)` view which stores all products in the database as a list in the context, then add the view to the `product/list/` URL.
 
+## Dynamic Linking of URLs
 
-https://youtu.be/F5mRW0jo-U4?t=10800
+We want to add links to each products in our list of products.
+
+We can use a `<a href='/products/{{ instance.id }}'>` tag to link to the product, but if the structure of the URL changes, it will break.
+
+What we can do instead, is add a `get_absolute_url` function on our product model (convention):
+```python
+def get_absolute_url(self):
+    return f"/products/{self.id}/"
+```
+
+And use in our template:
+```html
+<a href='{{ instance.get_absolute_url }}'>{{ instance.title }} - ${{ instance.price }}</a>
+```
