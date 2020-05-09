@@ -640,4 +640,13 @@ We will need to add the `products:` namespace to the start of every reverse/url 
 
 > Basically, we have the choice to do routing via URL paths or names (+ namespaces). Using paths is simpler, but names allow for paths to update dynamically in views (+models). Names + namespaces are the best practice.
 
-https://youtu.be/F5mRW0jo-U4?t=11256
+## The next few will use previous knowledge gained
+
+1. Create a new App named Blog
+2. Add 'Blog' to your Django project
+3. Create a Model named Article
+4. Run Migrations
+5. Create a ModelForm for Article
+6. Create `article_list.html` & `article_detail.html` template
+7. Add Article Model to the Admin
+8. Save a new Article object in the admin
