@@ -22,11 +22,18 @@ class ArticleListView(ListView):
 class ArticleDetailView(DetailView):
     queryset = Article.objects.all()
     template_name = 'article_detail.html'
-
     # def get_object(self):
     #    id_ = self.kwargs.get("pk")  # Get object from URL
     #    return get_object_or_404(Article, id=id_)
 
+
+class ArticleCreateView(CreateView):
+    queryset = Article.objects.all()
+    template_name = 'article_create.html'
+    form_class = ArticleForm
+    # def form_valid(self, form):
+    #    print(form.cleaned_data)
+    #    return super().form_valid(form)
 
 """
 def article_list_view(request):

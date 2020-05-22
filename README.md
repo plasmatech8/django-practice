@@ -706,7 +706,6 @@ The objects passed into the context as: `object_list`.
 class ArticleDetailView(DetailView):
     queryset = Article.objects.all()
     template_name = 'article_detail.html'
-
     #def get_object(self):
     #    id_ = self.kwargs.get("pk")  # Get object from URL with different dynamic URL variable name
     #    return get_object_or_404(Article, id=id_)
@@ -717,3 +716,20 @@ The object is passed into the context as: `object`.
 
 > We can use `queryset = Article.objects.filter(id__gt=2)` to restrict viewable objects to >2 if we wanted to.
 
+## CreateView
+
+We can create a create view by using the same attributes, plus our form model class to specify the form fields.
+```python
+class ArticleCreateView(CreateView):
+    queryset = Article.objects.all()
+    template_name = 'article_create.html'
+    form_class = ArticleForm
+    # def form_valid(self, form):
+    #    print(form.cleaned_data)
+    #    return super().form_valid(form)
+```
+The form is passed into the context as: `form`.
+
+> Upon submission (POST), it will redirect the user to the detail-view using the model `get_absolute_url`. This also applies to update-view. (override using `success_url` attribute or `get_success_url` function).
+
+> There is also a `form_valid`/`form_invalid` function which can be used.
