@@ -1,8 +1,8 @@
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from django.shortcuts import render, get_object_or_404, redirect
+
 from .models import Article
 from .forms import ArticleForm
-
 from django.views.generic import (
     CreateView,
     DetailView,
@@ -50,6 +50,18 @@ class ArticleUpdateView(UpdateView):
     def get_object(self):
         id_ = self.kwargs.get("pk")  # Get object from URL
         return get_object_or_404(Article, id=id_)
+
+
+class ArticleDeleteView(DeleteView):
+    # queryset = Article.objects.all()
+    template_name = 'article_delete.html'
+
+    def get_object(self):
+        id_ = self.kwargs.get("pk")  # Get object from URL
+        return get_object_or_404(Article, id=id_)
+
+    def get_success_url(self):
+        return reverse('blog:article-list')
 
 
 """

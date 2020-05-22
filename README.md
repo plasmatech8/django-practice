@@ -761,3 +761,26 @@ class ArticleUpdateView(UpdateView):
         print(form.cleaned_data)
         return super().form_valid(form)
 ```
+The form is passed into the context as: `form`.
+
+## DeleteView
+
+Very similar to detail-view. We will use the same template as we did for the product-delete-view.
+
+```python
+class ArticleDeleteView(DeleteView):
+    # queryset = Article.objects.all()
+    template_name = 'article_delete.html'
+
+    def get_object(self):
+        id_ = self.kwargs.get("pk")  # Get object from URL
+        return get_object_or_404(Article, id=id_)
+
+    def get_success_url(self):
+        return reverse('blog:article-list')
+```
+
+The form is passed into the context as: `object`.
+
+> We need to make sure we define a get_success_url function.
+
