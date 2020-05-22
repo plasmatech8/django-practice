@@ -650,3 +650,51 @@ We will need to add the `products:` namespace to the start of every reverse/url 
 6. Create `article_list.html` & `article_detail.html` template
 7. Add Article Model to the Admin
 8. Save a new Article object in the admin
+
+## Class Based Views
+
+We can create class-based views (instead of function-based views) in `views.py` using standard django views.
+
+e.g.
+```python
+from django.views.generic import (
+    CreateView,
+    DetailView
+    ListView,
+    UpdateView,
+    DeleteView,
+)
+class ArticleListView(ListView):
+    template_name = 'articles/article_list.html'
+    queryset = Article.objects.all()
+```
+
+We can make class-based views inherit standard view functionality so we do not need to write much code.
+
+Pros:
+* Code reusability
+* Code extendability (inherit functionality from standard views and mixins)
+* Code structuring (seperate functions for post and get)
+
+Cons:
+* Harder to read
+* Harder to understand functionality
+* Inheritance
+
+See:
+* https://medium.com/@ksarthak4ever/django-class-based-views-vs-function-based-view-e74b47b2e41b
+* http://ccbv.co.uk/
+
+It is up to you to decide whether to use class or function based views.
+
+Class based views that do not inherit any standard-views/functionality can also be used. This will provide nice code structure and allow you to inherit later if you wish.
+
+## ListView
+
+ListView will supply a list from a queryset.
+```python
+class ArticleListView(ListView):
+    template_name = 'article_list.html'  # DEFAULT: <blog>/<modelname>_list.html
+    queryset = Article.objects.all()  # REQUIRED
+```
+The objects passed into the context as: `object_list`.

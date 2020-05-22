@@ -3,9 +3,23 @@ from django.shortcuts import get_object_or_404, redirect
 from .models import Article
 from .forms import ArticleForm
 
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    ListView,
+    UpdateView,
+    DeleteView
+)
+
 # Create your views here.
 
 
+class ArticleListView(ListView):
+    queryset = Article.objects.all()  # REQUIRED
+    template_name = 'article_list.html'
+
+
+"""
 def article_list_view(request):
     queryset = Article.objects.all()  # list of objects
     context = {
@@ -29,3 +43,4 @@ def article_detail_view(request, a_id):
         'obj': obj
     }
     return render(request, "article_detail.html", context)
+"""
