@@ -3,28 +3,54 @@ Following tutorial from https://www.youtube.com/watch?v=F5mRW0jo-U4
 
 (mark, mark)
 
-1. Basics (Apps)
-2. Models
-3. Routing
-4. Templating
-5. Forms
+1. Getting Started
+    * Create Project
+    * Run the Server
+1. App Basics
+    * Create an app
+    * Create Product Objects in the Python Shell
+    * Add New Fields for our Model
+    * Change a Model
+    * Change Default Homepage to Custom Homepage
+    * URLs Routing and Requests
+1. Django Templating Engine
+    * Django Templates
+    * Django Templating Engine Basics
+    * Include Template Tag
+    * Rendering Context in a Template (backend rendering)
+    * For Loop in a Template
+    * Using Conditions in a Template
+    * Template Tags and Filters
+    * Render Data from our Database
+    * How Django Templates Load with Apps
+1. Django Forms
+    * Django Model Forms
+    * Raw HTML Forms
+    * Pure Django Forms
+    * Form Widgets
+    * Form Validation Methods
+    * Initial Values for Forms (+ updating existing records)
+1. Dynamic Routing & Database Object Handling
+    * Dynamic URL Routing
+    * Handle DoesNotExist
+    * Delete and Confirm
+    * View a List of Database Objects
+    * Dynamic Linking of URLs (dynamic updating of URLs - names, models, and templates)
+1. Routing/Namespacing
+    * Django URLs Reverse (dynamic updating of URLs - names, models, and templates)
+    * In App URLs and Namespacing (dynamic updating of URLs - names, models, and templates)
+1. Break
+1. Class Based Views
+    * Class Based Views
+    * ListView
+    * DetailView
+    * CreateView
+    * UpdateView
+    * DeleteView
 
-## Setup
+## 01. Getting Started
 
-Open terminal/Anaconda prompt:
-```
-python -m venv env
-```
-Activate your environment
-```
-Windows: `.\env\Scripts\activate`
-Mac/Linux: `source env/bin/activate`
-```
-Install django
-```
-pip install django
-```
-## Create Project
+### Create Project
 
 Create project
 ```
@@ -34,7 +60,7 @@ django-admin startproject trydjango .
 ```
 You will see a `trydjango` folder and `manage.py`.
 
-## Run the Server
+### Run the Server
 
 Start server
 ```
@@ -42,7 +68,9 @@ python manage.py runserver
 ```
 Open localhost:8000 and you will be greeted with django default page.
 
-## Create an app
+## 02. App Basics
+
+### Create an app
 
 Apps are really good at storing data and mapping to your database. Apps are more like components than like 'mobile apps'.
 
@@ -72,7 +100,7 @@ Now we can register the model to the app by adding `admin.site.register(Product)
 
 Now we can run the server and register new products in the admin page. (with `python manage.py runserver` and go to http://127.0.0.1:8000/admin)
 
-## Create Product Objects in the Python Shell
+### Create Product Objects in the Python Shell
 
 We used the admin webpage before, now we will use Python shell.
 
@@ -96,7 +124,7 @@ Product.objects.all()
 
 Now you can start the server (`python manage.py runserver`) and see your newly created objects.
 
-## Add New Fields for our Model
+### Add New Fields for our Model
 
 We will update `src/products/models.py` because the title is too long, price is passed as a string, etc.
 
@@ -123,7 +151,7 @@ Use `python manage.py migrate --run-syncdb` if you run into operational error, n
 
 Now when you attempt to add new products in the admin age, the fields will have fixed input length, and input validation is performed.
 
-## Change a Model
+### Change a Model
 
 I am going to make a change to the model without deleting the database or migrations.
 
@@ -135,7 +163,7 @@ We need to do: `null=True` or `default=<value>` in code. Or we can provide a one
 
 Note: `blank=True` means that the field can be blank (different from null).
 
-## Change Default Homepage to Custom Homepage
+### Change Default Homepage to Custom Homepage
 
 Let's create an app called `pages`. (`python manage.py startapp products` and add to `INSTALLED_APPS`)
 
@@ -149,7 +177,7 @@ Afterwards we will need to update [urls.py](src/trydjango/urls.py). Notice that 
 
 Now we have a new homepage.
 
-## URLs Routing and Requests
+### URLs Routing and Requests
 
 In our view function, a `<WSGIRequest: GET>` object is passed in.
 
@@ -157,7 +185,9 @@ We can see requst information.
 
 `request.user` is the user. If you are logged in as admin it will be the admin username. If you open an incognito window, it will be AnnoymousUser.
 
-## Django Templates
+## 03. Django Templating Engine
+
+### Django Templates
 
 Instead of writing strings in our view functions, we want to have templates.
 
@@ -171,7 +201,7 @@ Also, make sure you add the `templates` directory to `settings.py`. Add the dire
 
 Now our templates are being used in the webpage!
 
-## Django Templating Engine Basics
+### Django Templating Engine Basics
 
 There is a lot of things in common between each of the pages we created and we do not want to duplicate work in multiple files and make things messy. (Headers, CSS, Javascript, nav bars, etc)
 
@@ -203,19 +233,19 @@ i.e.
 
 Note that 'content' is the name of the blocks.
 
-## Include Template Tag
+### Include Template Tag
 
 Now lets move our navbar into another HTML document named `navbar.html`.
 
 We can add this to `base.html` by using `{% include 'navbar.html' %}`.
 
-## Rendering Context in a Template (backend rendering)
+### Rendering Context in a Template (backend rendering)
 
 We can render our HTML using the context dictionary.
 
 We can update the context dictionary in `views.py` and add `{{ my_text }}` to obtain the value from the dictionary.
 
-## For Loop in a Template
+### For Loop in a Template
 
 We want to print the list called 'my_list' in the context dictionary into a `<ul>`.
 
@@ -232,7 +262,7 @@ i.e.
 
 `{{ forloop.counter }}` can also be used to obtain the iteration number.
 
-## Using Conditions in a Template
+### Using Conditions in a Template
 
 Usually we want most if-else statements to occur in the view and not the template, but there are cases where it is suitable to do this in the template.
 
@@ -247,7 +277,7 @@ We can create an if-else statement like:
 
 See the documentation for build-in template tags: https://docs.djangoproject.com/en/3.0/ref/templates/builtins/
 
-## Template Tags and Filters
+### Template Tags and Filters
 
 So far we have used several build-in template tags:
 * extends
@@ -265,7 +295,7 @@ e.g.
 * `{{ my_html|safe }}` (renders HTML)
 * `{{ address|slugify }}`
 
-## Render Data from our Database
+### Render Data from our Database
 
 Open `python manage.py shell`
 ```python
@@ -299,7 +329,8 @@ We will create a new template under `src/templates/product/detail.html`.
 <p>Price: ${{ obj.price }}</p>
 {% endblock %}
 ```
-## How Django Templates Load with Apps
+
+### How Django Templates Load with Apps
 
 If we want to bundle our products page/templates, we can create a `templates` directory inside the app directory. (i.e. if we are creating a 3rd party app for other people)
 
@@ -309,7 +340,9 @@ Note: No configuration in `settings.py` is needed for the view to access the tem
 
 Note: Ensure that the paths to templates do not conflict to avoid confusion. Paths are checked in a specific order. We can override defaul django templates if we wanted to.
 
-## Django Model Forms
+## 04. Django Forms
+
+### Django Model Forms
 
 We will go into the `products` app and create `forms.py`.
 ```python
@@ -352,7 +385,7 @@ The `form.as_p` attribute will automatically render a Product creation form so w
 
 And lastly, add the new page to `urls.py`.
 
-## Raw HTML Forms
+### Raw HTML Forms
 
 We can also do raw custom HTML forms.
 
@@ -385,7 +418,7 @@ def product_create_view(request):
 
 This is a bad method of saving data because we still need to add validation and cleaning.
 
-## Pure Django Forms
+### Pure Django Forms
 
 A Django form can also be created manually using the Django forms. i.e.
 ```python
@@ -416,9 +449,9 @@ A user can potentially disrupt the client-side form, so we can add validation as
 
 It is also important to add the CSRF token.
 
-> Django Model Forms are the best because they are directly attached to models with the webserver and database configured automatically.
+> Django **Model** Forms are the best because they are directly attached to models with the webserver and database configured automatically.
 
-## Form Widgets
+### Form Widgets
 
 We can change a lot about our model fields. i.e.
 ```python
@@ -448,7 +481,7 @@ Now our custom/pure-Django form is almost identical to our Model Form.
 
 > Another neat feature to note is that we can actually override the widgets of **Model Forms** by setting attributes on our class like how we did for pure-django/custom Forms: `title = forms.CharField()`.
 
-## Form Validation Methods
+### Form Validation Methods
 
 We can use Django to validate our inputs.
 
@@ -467,7 +500,7 @@ Now expletive language does not pass validation for product names.
 
 We can do all sorts of validation such as email checking, expletive removal, etc.
 
-## Initial Values for Forms (+ updating existing records)
+### Initial Values for Forms (+ updating existing records)
 
 We can set initial values for forms from within our `view.py` by creating a dictionary and passing into the `RawProductForm`.
 
@@ -490,7 +523,9 @@ context = {'form': form}
 return render(request, 'products/products_create.html', context)
 ```
 
-## Dynamic URL Routing
+## 05. Dynamic Routing & Database Object Handling
+
+### Dynamic URL Routing
 
 Now we will change the content based on the URL.
 
@@ -509,7 +544,7 @@ def product_dynamic_lookup_view(request, p_id):
 ```
 Now we are rendering a new product for each id.
 
-## Handle DoesNotExist
+### Handle DoesNotExist
 
 If the product with the id does not exist, an error page will show up. We will import the `django.shortcuts.get_object_or_404` function and use that to handle this situation.
 
@@ -517,7 +552,7 @@ Now we get page not found error instead of product does not exist.
 
 We can alternatively use a `try` block and raise a `django.http.Http404`.
 
-## Delete and Confirm
+### Delete and Confirm
 
 We will create a product deletion form (the form itself acts as confirmation page).
 
@@ -533,11 +568,12 @@ if request.method == 'POST':
 ```
 To delete the object when the DELETE button is clicked, and redirect back to the base `products/` page.
 
-## View a List of Database Objects
+### View a List of Database Objects
 
 We will create the `product2/product_list.html` template which uses for-loop template tags, then create the `product_list_view(request)` view which stores all products in the database as a list in the context, then add the view to the `product/list/` URL.
 
-## Dynamic Linking of URLs (dynamic updating of URLs - names, models, and templates)
+
+### Dynamic Linking of URLs (dynamic updating of URLs - names, models, and templates)
 
 We want to add links to each products in our list of products.
 
@@ -556,7 +592,9 @@ And use in our template:
 
 But there is an more-standardised/better way...
 
-## Django URLs Reverse (dynamic updating of URLs - names, models, and templates)
+## 06. Routing/Namespacing
+
+### Django URLs Reverse (dynamic updating of URLs - names, models, and templates)
 
 We can give URLs names:
 ```python
@@ -602,7 +640,7 @@ Making template URLs dynamic can be done using the `url` template tag (same as `
 </nav>
 ```
 
-## In App URLs and Namespacing (dynamic updating of URLs - names, models, and templates)
+### In App URLs and Namespacing (dynamic updating of URLs - names, models, and templates)
 
 We have a lot of views to import, and what if we use more than one name for a single path? Ans: bad.
 
@@ -640,7 +678,9 @@ We will need to add the `products:` namespace to the start of every reverse/url 
 
 > Basically, we have the choice to do routing via URL paths or names (+ namespaces). Using paths is simpler, but names allow for paths to update dynamically in views (+models). Names + namespaces are the best practice.
 
-## The next few will use previous knowledge gained
+## 07. Break
+
+The next few will use previous knowledge gained
 
 1. Create a new App named Blog
 2. Add 'Blog' to your Django project
@@ -651,7 +691,9 @@ We will need to add the `products:` namespace to the start of every reverse/url 
 7. Add Article Model to the Admin
 8. Save a new Article object in the admin
 
-## Class Based Views
+## 08. Class Based Views
+
+### Class Based Views
 
 We can create class-based views (instead of function-based views) in `views.py` using standard django views.
 
@@ -689,7 +731,7 @@ It is up to you to decide whether to use class or function based views.
 
 Class based views that do not inherit any standard-views/functionality can also be used. This will provide nice code structure and allow you to inherit later if you wish.
 
-## ListView
+### ListView
 
 ListView will supply a list from a queryset.
 ```python
@@ -699,7 +741,7 @@ class ArticleListView(ListView):
 ```
 The objects passed into the context as: `object_list`.
 
-## DetailView
+### DetailView
 
 `pk` stands for Primary Key. It is the same as the record ID. You need to use `pk` in the URL path to point towards the record.
 ```python
@@ -717,7 +759,7 @@ The object is passed into the context as: `object`.
 
 > We can use `queryset = Article.objects.filter(id__gt=2)` to restrict viewable objects to >2 if we wanted to.
 
-## CreateView
+### CreateView
 
 We can create a create view by using the same attributes, plus our form model class to specify the form fields.
 ```python
@@ -741,7 +783,7 @@ The form is passed into the context as: `form`.
 > There is also a `form_valid`/`form_invalid` function which can be used.
 
 
-## UpdateView
+### UpdateView
 
 > As we create more views, notice how inheritance can be really good by providing all classes the same get_object methods.
 
@@ -763,7 +805,7 @@ class ArticleUpdateView(UpdateView):
 ```
 The form is passed into the context as: `form`.
 
-## DeleteView
+### DeleteView
 
 Very similar to detail-view. We will use the same template as we did for the product-delete-view.
 
