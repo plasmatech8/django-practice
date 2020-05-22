@@ -47,7 +47,8 @@ Following tutorial from https://www.youtube.com/watch?v=F5mRW0jo-U4
     * CreateView
     * UpdateView
     * DeleteView
-    * Converting Function-based to Class-based views
+    * Converting Function-based to Class-based views (Raw Views)
+    * Generic vs Raw Class-Based Views
 
 ## 01. Getting Started
 
@@ -827,7 +828,7 @@ The form is passed into the context as: `object`.
 
 > We need to make sure we define a get_success_url function.
 
-### Converting Function-based to Class-based views
+### Converting Function-based to Class-based views (Raw Views)
 
 Class-based views are nice.
 ```python
@@ -855,4 +856,178 @@ def example_view(request, *args, **kwargs):
 
 ```
 If we wanted to override the template_name, we could do `ExampleView.as_view(template_name='contact.html'` in `urls.py`.
+
+We can use the same template for two different pages if we wanted to.
+
+#### Raw Detail C-B-View
+
+We can set an `id` as None by default if we wanted to, to make it optional.
+```python
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Course
+
+
+class CourseView(View):
+    template_name = "course_detail.html"
+
+    def get(self, request, id=None, *args, **kwargs):
+        context = {}
+        if id is not None:
+            context['object'] = get_object_or_404(Course, id)
+        return render(request, self.template_name, context)
+```
+
+#### Raw List C-B-View
+
+List views are simple. The inheritance property is good because we can make child classes with filtered querysets...?
+```python
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Course
+
+
+class CourseListView(View):
+    template_name = "course_list.html"
+    queryset = Course.objects.all()
+
+    def get_querset(self):
+        return self.queryset
+
+    def get(self, request, *args, **kwargs):
+        context = {'object_list': self.get_querset()}
+        return render(request, self.template_name, context)
+```
+
+#### Raw Create C-B-View
+
+```python
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Course
+from .forms import CourseModelForm
+
+
+class CourseCreateView(View):
+    template_name = "course_create.html"
+
+    def get(self, request, *args, **kwargs):
+        form = CourseModelForm()
+        context = {'form': form}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        form = CourseModelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            form = CourseModelForm()
+        context = {'form': form}
+        return render(request, self.template_name, context)
+```
+Note: to refresh the form page, you can simply pass a new form object into the context.
+
+Model Form:
+```python
+from django import forms
+from .models import Course
+
+
+class CourseModelForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = [
+            'title',
+        ]
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if 'fuck' in title:
+            raise forms.ValidationError('Explicit language. Invalid title')
+        return title
+```
+
+#### Raw Update C-B-View
+
+`get_object` is made so it works in both our get and post methods.
+```python
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Course
+from .forms import CourseModelForm
+
+
+class CourseUpdateView(View):
+    template_name = "course_update.html"
+
+    def get_object(self):
+        id = self.kwargs.get('id')
+        if id is not None:
+            return get_object_or_404(Course, id=id)
+        return None
+
+    def get(self, request, *args, **kwargs):
+        """View the details and update form for an object"""
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = CourseModelForm(instance=obj)
+            context['object'] = obj
+            context['form'] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        """Save the data for an object"""
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            form = CourseModelForm(request.POST, instance=obj)
+            if form.is_valid():
+                form.save()
+            context['object'] = obj
+            context['form'] = form
+        return render(request, self.template_name, context)
+```
+
+> Note: C-B-view `self.kwargs.get('id')` == F-B-view `dynamic_lookup_view(request, id)`
+
+#### Raw Delete C-B-View
+
+```python
+from django.shortcuts import render, get_object_or_404
+from django.views import View
+from .models import Course
+from .forms import CourseModelForm
+
+
+class CourseDeleteView(View):
+    template_name = "course_delete.html"
+
+    def get_object(self):
+        id = self.kwargs.get('id')
+        if id is not None:
+            return get_object_or_404(Course, id=id)
+        return None
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            context['object'] = obj
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        obj = self.get_object()
+        if obj is not None:
+            obj.delete()
+            context['object'] = None
+            return redirect('/courses/')
+        return render(request, self.template_name, context)
+```
+
+### Generic vs Raw Class-Based Views
+
+You can see all the logic and variables in raw class-based views, but it can get a bit redundant.
+
+Generic C-B views are simpler and cleaner, only requiring few parameters and overloading.
 
