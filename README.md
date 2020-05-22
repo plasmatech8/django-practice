@@ -706,9 +706,10 @@ The objects passed into the context as: `object_list`.
 class ArticleDetailView(DetailView):
     queryset = Article.objects.all()
     template_name = 'article_detail.html'
-    #def get_object(self):
-    #    id_ = self.kwargs.get("pk")  # Get object from URL with different dynamic URL variable name
-    #    return get_object_or_404(Article, id=id_)
+
+    def get_object(self):
+        id_ = self.kwargs.get("pk")  # Get object from URL with different dynamic URL variable name
+        return get_object_or_404(Article, id=id_)
 ```
 The object is passed into the context as: `object`.
 
@@ -724,12 +725,39 @@ class ArticleCreateView(CreateView):
     queryset = Article.objects.all()
     template_name = 'article_create.html'
     form_class = ArticleForm
-    # def form_valid(self, form):
-    #    print(form.cleaned_data)
-    #    return super().form_valid(form)
+
+    def get_object(self):
+        id_ = self.kwargs.get("pk")  # Get object from URL
+        return get_object_or_404(Article, id=id_)
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
 ```
 The form is passed into the context as: `form`.
 
 > Upon submission (POST), it will redirect the user to the detail-view using the model `get_absolute_url`. This also applies to update-view. (override using `success_url` attribute or `get_success_url` function).
 
 > There is also a `form_valid`/`form_invalid` function which can be used.
+
+
+## UpdateView
+
+> As we create more views, notice how inheritance can be really good by providing all classes the same get_object methods.
+
+We can create an update-view which is almost identical to create-view.
+
+```python
+class ArticleUpdateView(UpdateView):
+    queryset = Article.objects.all()
+    template_name = 'article_update.html'
+    form_class = ArticleForm
+
+    def get_object(self):
+        id_ = self.kwargs.get("pk")  # Get object from URL
+        return get_object_or_404(Article, id=id_)
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+```
