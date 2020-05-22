@@ -12,4 +12,4 @@ class Article(models.Model):
         on_delete=models.CASCADE)
 
     def get_absolute_url(self):
-        return ''  # reverse('blog:article-detail', kwargs={'a_id': self.id})
+        return reverse('blog:article-detail', kwargs={'pk': self.id})

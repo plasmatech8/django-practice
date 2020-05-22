@@ -19,6 +19,15 @@ class ArticleListView(ListView):
     template_name = 'article_list.html'
 
 
+class ArticleDetailView(DetailView):
+    queryset = Article.objects.all()
+    template_name = 'article_detail.html'
+
+    # def get_object(self):
+    #    id_ = self.kwargs.get("pk")  # Get object from URL
+    #    return get_object_or_404(Article, id=id_)
+
+
 """
 def article_list_view(request):
     queryset = Article.objects.all()  # list of objects

@@ -698,3 +698,22 @@ class ArticleListView(ListView):
     queryset = Article.objects.all()  # REQUIRED
 ```
 The objects passed into the context as: `object_list`.
+
+## DetailView
+
+`pk` stands for Primary Key. It is the same as the record ID. You need to use `pk` in the URL path to point towards the record.
+```python
+class ArticleDetailView(DetailView):
+    queryset = Article.objects.all()
+    template_name = 'article_detail.html'
+
+    #def get_object(self):
+    #    id_ = self.kwargs.get("pk")  # Get object from URL with different dynamic URL variable name
+    #    return get_object_or_404(Article, id=id_)
+```
+The object is passed into the context as: `object`.
+
+> To allow our model to expect a different URL integer other than `pk`, we can override built-in methods like get_object if we wanted to.
+
+> We can use `queryset = Article.objects.filter(id__gt=2)` to restrict viewable objects to >2 if we wanted to.
+
