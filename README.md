@@ -47,6 +47,7 @@ Following tutorial from https://www.youtube.com/watch?v=F5mRW0jo-U4
     * CreateView
     * UpdateView
     * DeleteView
+    * Converting Function-based to Class-based views
 
 ## 01. Getting Started
 
@@ -825,4 +826,33 @@ class ArticleDeleteView(DeleteView):
 The form is passed into the context as: `object`.
 
 > We need to make sure we define a get_success_url function.
+
+### Converting Function-based to Class-based views
+
+Class-based views are nice.
+```python
+from django.shortcuts import render
+from django.views import View
+
+# CLASS BASED VIEW
+
+
+class ExampleView(View):
+    template_name = 'about.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
+# FUNCTION BASED VIEW
+
+
+def example_view(request, *args, **kwargs):
+    return render(request, 'about.html', {})
+
+```
+If we wanted to override the template_name, we could do `ExampleView.as_view(template_name='contact.html'` in `urls.py`.
 
