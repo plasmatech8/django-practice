@@ -1031,3 +1031,23 @@ You can see all the logic and variables in raw class-based views, but it can get
 
 Generic C-B views are simpler and cleaner, only requiring few parameters and overloading.
 
+### Custom Mixins for Class Bsed Views
+
+Mixins allow us to extend C-B views with new code.
+
+This mixin can be used to create the get_object function (defauling to the Course model).
+
+```python
+class CourseObjectMixin(object):
+    model = Course
+
+    def get_object(self):
+        id = self.kwargs.get('id')
+        if id is not None:
+            return get_object_or_404(self.model, id=id)
+        return None
+```
+
+This will help reduce redundancy in my code. i.e. `CourseDeleteView(CourseObjectMixin, View)`. Mixin must come first.
+
+We can also use this to replace the `if id is None` and `get_object_or_404` logic, because  the function in the mixin handles this  for us.
