@@ -22,6 +22,11 @@ Contents:
     - [Build and run](#build-and-run)
   - [04. React Router + Components](#04-react-router--components)
 
+Suggestions:
+* Use a different module bundler other than webpack
+* Use different frontend folder structure. i.e. `src`, `build` or `static/js`, `templates`
+* Put css and assets into React src
+
 ## 01. Basics
 
 ### Setup
