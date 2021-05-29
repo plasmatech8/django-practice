@@ -14,6 +14,12 @@ Contents:
     - [Create Database model](#create-database-model)
     - [Use REST framework to create a model record (POST)](#use-rest-framework-to-create-a-model-record-post)
     - [Use REST framework to list model records](#use-rest-framework-to-list-model-records)
+  - [03. React integration (w/ Webpack)](#03-react-integration-w-webpack)
+    - [Create new app for frontend](#create-new-app-for-frontend)
+    - [Configuration files](#configuration-files)
+    - [Initialize Template & React files](#initialize-template--react-files)
+    - [Initialise Django View & URLs](#initialise-django-view--urls)
+    - [Build and run](#build-and-run)
 
 ## 01. Basics
 
@@ -178,3 +184,131 @@ Changing our endpoing from CREATE to LIST is as simple as changing the inheritan
 ```python
 class RoomView(generics.ListAPIView):
 ```
+
+## 03. React integration (w/ Webpack)
+
+### Create new app for frontend
+
+Create app with command: `django-admin startapp frontend`
+
+Update the `settings.py`: `'frontend',`
+
+Create folders:
+```
+cd frontend \
+mkdir \
+  templates \
+  templates/frontend \
+  static \
+  static/frontend \
+  static/css \
+  static/images \
+  src \
+  src/components
+```
+
+Create NPM project with command: `npm init -y`
+```bash
+npm i webpack webpack-cli --save-dev
+npm i @babel/core babel-loader @babel/preset-env @babel/preset-react --save-dev
+
+npm i @babel/plugin-proposal-class-properties
+npm i react react-dom --save-dev
+npm i react-router-dom
+
+npm i @material-ui/core
+npm i @material-ui/icons
+```
+* webpack for module bundling
+* babel for browser compatability (ES6, etc)
+* @babel/plugin-proposal-class-properties for async await (???)
+
+
+### Configuration files
+
+We will create/copy:
+* `babel.config.json`
+* `webpack.config.json`
+
+Add to `package.json`:
+* Create a 'dev' script: `"dev": "webpack --mode development --watch",`
+* Create a 'build' script: `"build": "webpack --mode production",`
+
+### Initialize Template & React files
+
+Create root template file, `templates/frontend/index.html`:
+```html
+<!-- ... -->
+  {% load static % }
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+  />
+  <link rel="stylesheet" type="text/css" href="{% static "css/index.css" %}"/>
+  <script src="{% static "frontend/main.js" %}" defer></script>
+<!-- ... -->
+  <div id="main">
+    <div id="app"></div>
+  </div>
+```
+* We will use load static to load files from the static directory, and load our JS and CSS.
+
+Create React entry point file, `index.js`:
+```js
+import { render } from "react-dom";
+import App from "./components/App";
+const appDiv = document.querySelector('#app')
+render(<App/>, appDiv);
+```
+
+Create React app component:
+```jsx
+import React, { Component } from "react";
+function App() {
+  return (
+    <div>
+      <h1>Hello World!</h1>
+      <p>Wahoo!!!</p>
+    </div>
+  )
+}
+export default App
+```
+
+Django will use send the template to the client, which is controlled by the React application.
+
+### Initialise Django View & URLs
+
+Add the view to `frontend/views.py`:
+```python
+def index(request, *args, **kwargs):
+    return render(request, 'frontend/index.html')
+```
+
+Create `frontend/urls.py` and add the URL:
+```python
+from django.urls import path
+from .views import index
+urlpatterns = [
+    path('', index),
+]
+```
+
+Include the frontend URLs in `music_controller/urls.py`:
+```python
+# ...
+    path('', include('frontend.urls')),
+# ...
+```
+
+### Build and run
+
+We can now do:
+```bash
+npm run build
+python manage.py runserver
+```
+
+We can see our webpage!
+
+We can also use `npm run dev` to update the frontend.
