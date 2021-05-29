@@ -2,7 +2,7 @@
 
 See:
 * [Django & React Tutorial ](https://www.youtube.com/watch?v=JD-age0BPVo) By Tech With Tim on YouTube
-* ...
+* Consider taking inspiration from [this template](https://github.com/scottwoodall/django-react-template/) (esp for csrf token)
 
 Contents:
 - [Django & React](#django--react)
@@ -20,6 +20,7 @@ Contents:
     - [Initialize Template & React files](#initialize-template--react-files)
     - [Initialise Django View & URLs](#initialise-django-view--urls)
     - [Build and run](#build-and-run)
+  - [04. React Router + Components](#04-react-router--components)
 
 ## 01. Basics
 
@@ -312,3 +313,41 @@ python manage.py runserver
 We can see our webpage!
 
 We can also use `npm run dev` to update the frontend.
+
+> Note: IDK why we need a `templates/frontend` folder. And it seems nicer change the folder name
+> from `static/frontend` to `static/js`
+
+> Note: I personally think the file structure is better as:
+> * `src/*` <- contains all css/js and assets
+> * `templates/index.html`
+> * `build/<css|js|img>`
+> And have the module bundler
+
+## 04. React Router + Components
+
+We will create pages:
+* HomePage
+* CreateRoomPage
+* JoinRoomPage
+* NotFoundPage
+
+We will add React router:
+```jsx
+<Router>
+  <Link to="/join">Link to JOIN room</Link>
+
+  <Switch>
+      <Route exact path='/' component={HomePage} />
+      <Route exact path='/join' component={JoinRoomPage} />
+      <Route exact path='/create' component={CreateRoomPage} />
+      <Route component={NotFound}/>
+  </Switch>
+</Router>
+```
+
+We can change the change the URL to a `re_path` so that we can match all paths to the React App:
+```python
+urlpatterns = [
+    re_path(r'^.*$', index)
+]
+```
