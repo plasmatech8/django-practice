@@ -420,4 +420,12 @@ We can see the returned record, and update it too (but only for fields shown in 
 > * PATCH /rooms
 > * PUT /rooms
 > * DELETE /rooms
-> Use ViewSets or ModelViewSet to add multiple views (TODO)
+>
+> Use ViewSets or ModelViewSet to add multiple APIs to the same view (TODO)
+>
+> Although, I do not know if it is best practice for endpoints with customized inputs (like above)
+> should be placed under `POST /rooms` or `POST /create-room`, since the JSON is different from
+> the raw data.
+
+
+
