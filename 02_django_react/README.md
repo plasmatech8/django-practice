@@ -22,6 +22,7 @@ Contents:
     - [Build and run](#build-and-run)
   - [04. React Router + Components](#04-react-router--components)
   - [05. POST Requests (create room)](#05-post-requests-create-room)
+  - [06. Frontend POST Request (Create Room page)](#06-frontend-post-request-create-room-page)
 
 Suggestions:
 * Use a different module bundler other than webpack
@@ -413,13 +414,13 @@ Then we update `api/urls.py` to show the additional page under `/api/create-room
 
 We can see the returned record, and update it too (but only for fields shown in the serializer).
 
-> **Not best practice**.
+> **Possibly not best practice**.
 > It is best RESTful practice to organise the resource paths differently:
 > * GET /rooms
 > * POST /rooms
-> * PATCH /rooms
-> * PUT /rooms
-> * DELETE /rooms
+> * PATCH /rooms/0
+> * PUT /rooms/0
+> * DELETE /rooms/0
 >
 > Use ViewSets or ModelViewSet to add multiple APIs to the same view (TODO)
 >
@@ -427,5 +428,23 @@ We can see the returned record, and update it too (but only for fields shown in 
 > should be placed under `POST /rooms` or `POST /create-room`, since the JSON is different from
 > the raw data.
 
+## 06. Frontend POST Request (Create Room page)
 
+We can create React code to submit a POST request to our endpoint.
+
+```js
+  const [guestCatPause, setGuestCanPause] = useState(true);
+  const [votesToSkip, setVotesToSkip] = useState(1);
+  const handleGuestCanPause = (e) => setGuestCanPause(e.target.value === 'true')
+  const handleVotesToSkip = (e) => setVotesToSkip(parseInt(e.target.value))
+  const handleSubmit = async (e) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ guest_can_pause: guestCatPause, votes_to_skip: votesToSkip })
+    }
+    const response = await (await fetch('/api/create-room', requestOptions)).json()
+    console.log(response)
+  }
+```
 

@@ -2,9 +2,11 @@ import React from 'react'
 
 function JoinRoomPage() {
   return (
-    <div>
-      Join room page
-    </div>
+    <>
+      <p>
+        Join room page
+      </p>
+    </>
   )
 }
 
