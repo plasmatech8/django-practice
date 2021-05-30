@@ -21,11 +21,14 @@ Contents:
     - [Initialise Django View & URLs](#initialise-django-view--urls)
     - [Build and run](#build-and-run)
   - [04. React Router + Components](#04-react-router--components)
+  - [05. POST Requests (create room)](#05-post-requests-create-room)
 
 Suggestions:
 * Use a different module bundler other than webpack
 * Use different frontend folder structure. i.e. `src`, `build` or `static/js`, `templates`
 * Put css and assets into React src
+* `manage.py` usually at root level of repo
+* If we want, it is possible to have apps inside folders or sub-apps, and we can reference them using dot notation.
 
 ## 01. Basics
 
@@ -356,3 +359,65 @@ urlpatterns = [
     re_path(r'^.*$', index)
 ]
 ```
+
+## 05. POST Requests (create room)
+
+We want an API endpoint to create a room:
+* `guest_can_pause` and `votes_to_skip` are input parameters in the request
+* `created_at` and `created_at` are generated on automatically using model defaults
+* `host` must be obtained by using from the session key, managed by a custom APIView
+
+In `api/serializers.py`, We will create a new serializer for create-room requests:
+```python
+class CreateRoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ('guest_can_pause', 'votes_to_skip')
+```
+
+In `api/views.py`, we could use `CreateAPIView`, but we need to use a custom `APIView` to get the
+session/host:
+```python
+class CreateRoomView(APIView):
+    serializer_class = CreateRoomSerializer
+
+    def post(self, request, format=None):
+        # If the user does not have a session, create a session
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+
+        # Get data from request & serializer
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            guest_can_pause = serializer.data.get('guest_can_pause')
+            votes_to_skip = serializer.data.get('votes_to_skip')
+            host = self.request.session.session_key
+            # Update the room if the host already owns a room, else Create new room
+            queryset = Room.objects.filter(host=host)
+            if queryset.exists():
+                room = queryset[0]
+                room.guest_can_pause = guest_can_pause
+                room.votes_to_skip = votes_to_skip
+                room.save(update_fields=['guest_can_pause', 'votes_to_skip'])
+            else:
+                room = Room(host=host, guest_can_pause=guest_can_pause, votes_to_skip=votes_to_skip)
+                room.save()
+
+            # Return a response of the record created
+            return Response(RoomSerializer(room).data, status=status.HTTP_201_CREATED)
+        # Error
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+```
+
+Then we update `api/urls.py` to show the additional page under `/api/create-room`.
+
+We can see the returned record, and update it too (but only for fields shown in the serializer).
+
+> **Not best practice**.
+> It is best RESTful practice to organise the resource paths differently:
+> * GET /rooms
+> * POST /rooms
+> * PATCH /rooms
+> * PUT /rooms
+> * DELETE /rooms
+> Use ViewSets or ModelViewSet to add multiple views (TODO)

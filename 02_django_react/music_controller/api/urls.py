@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.urls import path
 
-from .views import hello, RoomView
+from .views import hello, ListRoomView, CreateRoomView
 
 urlpatterns = [
     path('hello', hello),
-    path('rooms', RoomView.as_view()),
+    path('rooms', ListRoomView.as_view()),
+    path('create-room', CreateRoomView.as_view()),
 ]
