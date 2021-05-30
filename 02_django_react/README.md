@@ -23,6 +23,7 @@ Contents:
   - [04. React Router + Components](#04-react-router--components)
   - [05. POST Requests (create room)](#05-post-requests-create-room)
   - [06. Frontend POST Request (Create Room page)](#06-frontend-post-request-create-room-page)
+  - [07,](#07)
 
 Suggestions:
 * Use a different module bundler other than webpack
@@ -30,6 +31,11 @@ Suggestions:
 * Put css and assets into React src
 * `manage.py` usually at root level of repo
 * If we want, it is possible to have apps inside folders or sub-apps, and we can reference them using dot notation.
+
+Thoughts:
+* React is nice, though it adds complexity
+* Using pure Django with templates makes authentication easier
+* I like the idea of using Svelte-made webcomponents, so we can use them in pure HTML (in the templates)
 
 ## 01. Basics
 
@@ -448,3 +454,15 @@ We can create React code to submit a POST request to our endpoint.
   }
 ```
 
+## 07,
+
+We can then create the `room/<str:roomcode>` route/page in our frontend:
+
+We will also need to create the `GET /rooms/0` endpoint.
+* Requires a GetRoom APIView
+* Uses `RoomSerializer`
+* Will need the attribute: `lookup_url_kwarg = 'code'`
+* Get function: `code = request.GET.get(self.lookup_url_kwarg`
+* Checks `session_key == room[0].host`
+
+I have also added the redirect to the room, after create-room form submission.

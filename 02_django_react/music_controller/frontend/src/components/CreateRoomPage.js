@@ -8,11 +8,11 @@ import FormHelperText from "@material-ui/core/FormHelperText"
 import Radio from "@material-ui/core/Radio"
 import RadioGroup from "@material-ui/core/RadioGroup"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 
 
 function CreateRoomPage() {
-
+  const history = useHistory()
   const [guestCatPause, setGuestCanPause] = useState(true);
   const [votesToSkip, setVotesToSkip] = useState(1);
 
@@ -26,6 +26,7 @@ function CreateRoomPage() {
     }
     const response = await (await fetch('/api/create-room', requestOptions)).json()
     console.log(response)
+    history.push(`/rooms/${response.code}`)
   }
 
   return (
